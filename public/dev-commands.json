@@ -1,0 +1,46 @@
+{
+  "commands": [
+    {
+      "id": "restart",
+      "name": "Redémarrer le service",
+      "command": "systemctl restart bookos",
+      "description": "Redémarre le service BookOS"
+    },
+    {
+      "id": "sync-library",
+      "name": "Synchroniser la bibliothèque",
+      "command": "bookos sync --library",
+      "description": "Synchronise la bibliothèque avec Calibre"
+    },
+    {
+      "id": "clear-cache",
+      "name": "Vider le cache",
+      "command": "bookos cache --clear",
+      "description": "Supprime tous les fichiers en cache"
+    },
+    {
+      "id": "update",
+      "name": "Mise à jour",
+      "command": "bookos update",
+      "description": "Vérifie et installe les mises à jour"
+    },
+    {
+      "id": "backup",
+      "name": "Sauvegarder",
+      "command": "bookos backup --create",
+      "description": "Crée une sauvegarde des données"
+    },
+    {
+      "id": "reboot",
+      "name": "Redémarrer la liseuse",
+      "command": "sudo reboot",
+      "description": "Redémarre complètement l'appareil"
+    },
+    {
+      "id": "shutdown",
+      "name": "Éteindre",
+      "command": "sudo shutdown -h now",
+      "description": "Éteint l'appareil"
+    }
+  ]
+}

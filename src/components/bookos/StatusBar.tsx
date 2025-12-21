@@ -1,7 +1,12 @@
-import { Battery, Wifi, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-export function StatusBar() {
+interface StatusBarProps {
+  onTitleClick?: () => void;
+  titleClickCount?: number;
+}
+
+export function StatusBar({ onTitleClick, titleClickCount = 0 }: StatusBarProps) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -17,11 +22,18 @@ export function StatusBar() {
           {time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
-      <span className="font-display font-medium text-foreground">BookOS</span>
-      <div className="flex items-center gap-2">
-        <Wifi className="w-3 h-3" />
-        <Battery className="w-4 h-4" />
-      </div>
+      <button 
+        onClick={onTitleClick}
+        className="font-display font-medium text-foreground hover:text-primary transition-colors"
+      >
+        BookOS
+        {titleClickCount > 0 && titleClickCount < 5 && (
+          <span className="ml-1 text-[10px] text-muted-foreground">
+            ({5 - titleClickCount})
+          </span>
+        )}
+      </button>
+      <div className="w-12" /> {/* Spacer for balance */}
     </div>
   );
 }
