@@ -4,8 +4,8 @@ import { ThemeSelector } from './ThemeSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Lock, Unlock, Image, Palette } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Lock, Unlock, Image, Palette, Maximize, BookOpen, Grid3X3 } from 'lucide-react';
 
 interface SettingsPanelProps {
   settings: Settings;
@@ -63,14 +63,62 @@ export function SettingsPanel({
           placeholder="URL de l'image (optionnel)"
         />
         {settings.backgroundImage && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => onUpdateSettings({ backgroundImage: undefined })}
-          >
-            Supprimer l'image
-          </Button>
+          <>
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Flou: {settings.backgroundBlur}px</Label>
+              <Slider
+                value={[settings.backgroundBlur]}
+                onValueChange={([value]) => onUpdateSettings({ backgroundBlur: value })}
+                min={0}
+                max={20}
+                step={1}
+              />
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => onUpdateSettings({ backgroundImage: undefined })}
+            >
+              Supprimer l'image
+            </Button>
+          </>
         )}
+      </section>
+
+      {/* Icon Sizes Section */}
+      <section className="space-y-3">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Maximize className="w-4 h-4" />
+          <h3 className="text-sm font-medium">Taille des éléments</h3>
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Grid3X3 className="w-3 h-3 text-muted-foreground" />
+              <Label className="text-xs text-muted-foreground">Icônes d'application: {settings.appIconSize}px</Label>
+            </div>
+            <Slider
+              value={[settings.appIconSize]}
+              onValueChange={([value]) => onUpdateSettings({ appIconSize: value })}
+              min={48}
+              max={96}
+              step={4}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-3 h-3 text-muted-foreground" />
+              <Label className="text-xs text-muted-foreground">Couvertures de livre: {settings.bookCardSize}px</Label>
+            </div>
+            <Slider
+              value={[settings.bookCardSize]}
+              onValueChange={([value]) => onUpdateSettings({ bookCardSize: value })}
+              min={60}
+              max={120}
+              step={4}
+            />
+          </div>
+        </div>
       </section>
 
       {/* Lock Code Section */}

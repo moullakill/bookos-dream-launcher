@@ -7,9 +7,10 @@ interface LibraryViewProps {
   apps: App[];
   onOpenBook: (book: Book) => void;
   onEditBook: (book: Book) => void;
+  cardSize?: number;
 }
 
-export function LibraryView({ books, apps, onOpenBook, onEditBook }: LibraryViewProps) {
+export function LibraryView({ books, apps, onOpenBook, onEditBook, cardSize = 80 }: LibraryViewProps) {
   // Sort by last read, then by title
   const sortedBooks = [...books].sort((a, b) => {
     if (a.lastRead && b.lastRead) {
@@ -38,6 +39,7 @@ export function LibraryView({ books, apps, onOpenBook, onEditBook }: LibraryView
               book={book}
               onClick={() => onOpenBook(book)}
               onEdit={() => onEditBook(book)}
+              cardSize={cardSize}
             />
           ))}
         </div>

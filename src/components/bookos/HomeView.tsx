@@ -5,9 +5,10 @@ interface HomeViewProps {
   apps: App[];
   onOpenApp: (app: App) => void;
   onEditApp: (app: App) => void;
+  iconSize?: number;
 }
 
-export function HomeView({ apps, onOpenApp, onEditApp }: HomeViewProps) {
+export function HomeView({ apps, onOpenApp, onEditApp, iconSize = 64 }: HomeViewProps) {
   return (
     <div className="flex-1 p-6 overflow-y-auto">
       <div className="grid grid-cols-4 gap-4 justify-items-center">
@@ -17,6 +18,7 @@ export function HomeView({ apps, onOpenApp, onEditApp }: HomeViewProps) {
             app={app}
             onClick={() => onOpenApp(app)}
             onLongPress={() => onEditApp(app)}
+            iconSize={iconSize}
           />
         ))}
       </div>
