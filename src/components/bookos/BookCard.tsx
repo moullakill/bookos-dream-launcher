@@ -6,13 +6,18 @@ interface BookCardProps {
   book: Book;
   onClick: () => void;
   onEdit?: () => void;
+  cardSize?: number; // width in pixels
 }
 
-export function BookCard({ book, onClick, onEdit }: BookCardProps) {
+export function BookCard({ book, onClick, onEdit, cardSize = 80 }: BookCardProps) {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     onEdit?.();
   };
+
+  // Calculate height with book ratio (1:1.4)
+  const cardHeight = Math.round(cardSize * 1.4);
+  const iconSize = Math.round(cardSize * 0.4);
 
   return (
     <button
@@ -20,7 +25,10 @@ export function BookCard({ book, onClick, onEdit }: BookCardProps) {
       onContextMenu={handleContextMenu}
       className="group flex flex-col items-center gap-2 p-2 rounded-xl transition-all duration-300 hover:bg-secondary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="relative w-20 h-28 rounded-lg overflow-hidden shadow-icon group-hover:shadow-icon-hover transition-shadow duration-300">
+      <div 
+        className="relative rounded-lg overflow-hidden shadow-icon group-hover:shadow-icon-hover transition-shadow duration-300"
+        style={{ width: cardSize, height: cardHeight }}
+      >
         {book.cover ? (
           <img
             src={book.cover}
@@ -29,7 +37,7 @@ export function BookCard({ book, onClick, onEdit }: BookCardProps) {
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
-            <BookOpen className="w-8 h-8 text-primary/60" />
+            <BookOpen style={{ width: iconSize, height: iconSize }} className="text-primary/60" />
           </div>
         )}
         {book.progress !== undefined && book.progress > 0 && (
@@ -41,7 +49,7 @@ export function BookCard({ book, onClick, onEdit }: BookCardProps) {
           </div>
         )}
       </div>
-      <div className="text-center max-w-[5.5rem]">
+      <div className="text-center" style={{ maxWidth: cardSize + 16 }}>
         <p className="text-xs font-medium text-foreground truncate">{book.title}</p>
         <p className="text-[10px] text-muted-foreground truncate">{book.author}</p>
       </div>

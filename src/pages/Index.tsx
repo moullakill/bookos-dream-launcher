@@ -111,9 +111,10 @@ const Index = () => {
               backgroundImage: `url(${settings.backgroundImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              filter: `blur(${settings.backgroundBlur}px)`,
             }}
           />
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0" />
+          <div className="fixed inset-0 bg-background/60 z-0" />
         </>
       )}
 
@@ -134,6 +135,7 @@ const Index = () => {
             apps={apps}
             onOpenApp={handleOpenApp}
             onEditApp={handleEditApp}
+            iconSize={settings.appIconSize}
           />
         )}
 
@@ -143,6 +145,7 @@ const Index = () => {
             apps={apps}
             onOpenBook={handleOpenBook}
             onEditBook={handleEditBook}
+            cardSize={settings.bookCardSize}
           />
         )}
 

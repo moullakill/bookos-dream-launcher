@@ -5,6 +5,9 @@ const API_BASE = 'http://localhost:8080/api';
 
 const defaultSettings: Settings = {
   theme: 'paper',
+  backgroundBlur: 8,
+  appIconSize: 64,
+  bookCardSize: 80,
   isLocked: false,
 };
 

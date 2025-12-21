@@ -34,6 +34,9 @@ export interface Theme {
 export interface Settings {
   theme: string;
   backgroundImage?: string;
+  backgroundBlur: number; // 0-20
+  appIconSize: number; // 48-96
+  bookCardSize: number; // 60-120
   lockCode?: string;
   isLocked: boolean;
 }

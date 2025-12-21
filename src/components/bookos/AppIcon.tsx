@@ -5,20 +5,17 @@ interface AppIconProps {
   app: App;
   onClick: () => void;
   onLongPress?: () => void;
-  size?: 'sm' | 'md' | 'lg';
+  iconSize?: number; // size in pixels
 }
 
-export function AppIcon({ app, onClick, onLongPress, size = 'md' }: AppIconProps) {
-  const sizeClasses = {
-    sm: 'w-12 h-12 text-xl',
-    md: 'w-16 h-16 text-2xl',
-    lg: 'w-20 h-20 text-3xl',
-  };
-
+export function AppIcon({ app, onClick, onLongPress, iconSize = 64 }: AppIconProps) {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     onLongPress?.();
   };
+
+  // Calculate font size based on icon size
+  const fontSize = Math.round(iconSize * 0.4);
 
   return (
     <button
@@ -28,10 +25,9 @@ export function AppIcon({ app, onClick, onLongPress, size = 'md' }: AppIconProps
     >
       <div
         className={cn(
-          'icon-circle',
-          sizeClasses[size],
-          'group-active:scale-90'
+          'icon-circle group-active:scale-90'
         )}
+        style={{ width: iconSize, height: iconSize, fontSize }}
       >
         {app.icon.startsWith('http') || app.icon.startsWith('/') ? (
           <img 
