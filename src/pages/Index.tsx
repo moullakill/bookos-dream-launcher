@@ -8,13 +8,14 @@ import { HomeView } from '@/components/bookos/HomeView';
 import { LibraryView } from '@/components/bookos/LibraryView';
 import { SettingsPanel } from '@/components/bookos/SettingsPanel';
 import { DeveloperSettings } from '@/components/bookos/DeveloperSettings';
+import { SuperAppView } from '@/components/bookos/SuperAppView';
 import { Modal } from '@/components/bookos/Modal';
 import { AppForm } from '@/components/bookos/AppForm';
 import { BookForm } from '@/components/bookos/BookForm';
 import { App, Book } from '@/types/bookos';
 import { cn } from '@/lib/utils';
 
-type ViewType = 'home' | 'library' | 'settings' | 'developer';
+type ViewType = 'home' | 'library' | 'settings' | 'developer' | 'superapp';
 type ModalType = 'addApp' | 'editApp' | 'addBook' | 'editBook' | null;
 
 const Index = () => {
@@ -41,6 +42,7 @@ const Index = () => {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [titleClickCount, setTitleClickCount] = useState(0);
+  const [activeSuperApp, setActiveSuperApp] = useState<string | null>(null);
 
   const themeClass = getThemeClass(settings.theme);
 
@@ -58,11 +60,19 @@ const Index = () => {
   }, []);
 
   const handleOpenApp = (app: App) => {
-    if (app.isPath) {
+    if (app.isSuperApp && app.superAppId) {
+      setActiveSuperApp(app.superAppId);
+      setActiveView('superapp');
+    } else if (app.isPath) {
       window.location.href = app.url;
     } else {
       window.open(app.url, '_blank');
     }
+  };
+
+  const handleCloseSuperApp = () => {
+    setActiveSuperApp(null);
+    setActiveView('home');
   };
 
   const handleOpenBook = (book: Book) => {
@@ -168,8 +178,12 @@ const Index = () => {
           </div>
         )}
 
+        {activeView === 'superapp' && activeSuperApp && (
+          <SuperAppView appId={`superapp:${activeSuperApp}`} onClose={handleCloseSuperApp} />
+        )}
+
         <Dock
-          activeView={activeView === 'developer' ? 'settings' : activeView}
+          activeView={activeView === 'developer' || activeView === 'superapp' ? 'home' : activeView}
           onViewChange={setActiveView}
           onAddApp={() => setModalType('addApp')}
           onAddBook={() => setModalType('addBook')}
