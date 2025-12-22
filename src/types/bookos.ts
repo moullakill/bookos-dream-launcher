@@ -4,8 +4,6 @@ export interface App {
   url: string;
   icon: string;
   isPath: boolean; // true if it's a local path, false if URL
-  isSuperApp?: boolean; // true if it opens a BookOS component
-  superAppId?: string; // ID of the super app to open
   category?: string;
 }
 

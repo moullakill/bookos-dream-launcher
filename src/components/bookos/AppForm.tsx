@@ -4,15 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { ImageIcon } from 'lucide-react';
-import { superApps } from './superapps';
 
 interface AppFormProps {
   app?: App;
@@ -28,26 +20,14 @@ export function AppForm({ app, onSave, onDelete, onCancel }: AppFormProps) {
   const [url, setUrl] = useState(app?.url || '');
   const [icon, setIcon] = useState(app?.icon || '📱');
   const [isPath, setIsPath] = useState(app?.isPath || false);
-  const [isSuperApp, setIsSuperApp] = useState(app?.isSuperApp || false);
-  const [superAppId, setSuperAppId] = useState(app?.superAppId || '');
   const [useImageIcon, setUseImageIcon] = useState(
     app?.icon?.startsWith('http') || app?.icon?.startsWith('/') || false
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSuperApp && superAppId) {
-      const selectedSuperApp = superApps.find(sa => sa.id === superAppId);
-      onSave({ 
-        name: name || selectedSuperApp?.name || 'Super App', 
-        url: '', 
-        icon: icon || selectedSuperApp?.icon || '📝', 
-        isPath: false,
-        isSuperApp: true,
-        superAppId 
-      });
-    } else if (name && url) {
-      onSave({ name, url, icon, isPath, isSuperApp: false });
+    if (name && url) {
+      onSave({ name, url, icon, isPath });
     }
   };
 
@@ -66,69 +46,27 @@ export function AppForm({ app, onSave, onDelete, onCancel }: AppFormProps) {
         />
       </div>
 
-      {/* Super App Toggle */}
-      <div className="flex items-center justify-between">
-        <Label htmlFor="isSuperApp">Super App (plugin BookOS)</Label>
-        <Switch
-          id="isSuperApp"
-          checked={isSuperApp}
-          onCheckedChange={(checked) => {
-            setIsSuperApp(checked);
-            if (checked && superApps.length > 0) {
-              setSuperAppId(superApps[0].id);
-              setName(superApps[0].name);
-            }
-          }}
+      <div className="space-y-2">
+        <Label htmlFor="url">
+          {isPath ? 'Chemin local' : 'URL'}
+        </Label>
+        <Input
+          id="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder={isPath ? '/app/calibre' : 'https://...'}
+          required
         />
       </div>
 
-      {isSuperApp ? (
-        <div className="space-y-2">
-          <Label>Choisir une Super App</Label>
-          <Select value={superAppId} onValueChange={(value) => {
-            setSuperAppId(value);
-            const selected = superApps.find(sa => sa.id === value);
-            if (selected) {
-              setName(selected.name);
-            }
-          }}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner..." />
-            </SelectTrigger>
-            <SelectContent>
-              {superApps.map(sa => (
-                <SelectItem key={sa.id} value={sa.id}>
-                  {sa.name} - {sa.description}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      ) : (
-        <>
-          <div className="space-y-2">
-            <Label htmlFor="url">
-              {isPath ? 'Chemin local' : 'URL'}
-            </Label>
-            <Input
-              id="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder={isPath ? '/app/calibre' : 'https://...'}
-              required={!isSuperApp}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isPath">Chemin local (vs URL)</Label>
-            <Switch
-              id="isPath"
-              checked={isPath}
-              onCheckedChange={setIsPath}
-            />
-          </div>
-        </>
-      )}
+      <div className="flex items-center justify-between">
+        <Label htmlFor="isPath">Chemin local (vs URL)</Label>
+        <Switch
+          id="isPath"
+          checked={isPath}
+          onCheckedChange={setIsPath}
+        />
+      </div>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">

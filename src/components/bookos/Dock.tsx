@@ -1,10 +1,8 @@
 import { Library, Grid3X3, Settings, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type DockView = 'home' | 'library' | 'settings' | 'superapp';
-
 interface DockProps {
-  activeView: DockView;
+  activeView: 'home' | 'library' | 'settings';
   onViewChange: (view: 'home' | 'library' | 'settings') => void;
   onAddApp: () => void;
   onAddBook: () => void;
