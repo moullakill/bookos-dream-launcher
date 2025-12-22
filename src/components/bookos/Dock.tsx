@@ -1,9 +1,9 @@
-import { Library, Grid3X3, Settings, Plus } from 'lucide-react';
+import { Library, Grid3X3, Settings, Plus, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DockProps {
-  activeView: 'home' | 'library' | 'settings';
-  onViewChange: (view: 'home' | 'library' | 'settings') => void;
+  activeView: 'home' | 'library' | 'settings' | 'notes';
+  onViewChange: (view: 'home' | 'library' | 'settings' | 'notes') => void;
   onAddApp: () => void;
   onAddBook: () => void;
 }
@@ -12,6 +12,7 @@ export function Dock({ activeView, onViewChange, onAddApp, onAddBook }: DockProp
   const items = [
     { id: 'home' as const, icon: Grid3X3, label: 'Apps' },
     { id: 'library' as const, icon: Library, label: 'Livres' },
+    { id: 'notes' as const, icon: FileText, label: 'Notes' },
     { id: 'settings' as const, icon: Settings, label: 'Réglages' },
   ];
 
