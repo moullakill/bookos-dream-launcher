@@ -5,6 +5,7 @@ export interface App {
   icon: string;
   isPath: boolean; // true if it's a local path, false if URL
   category?: string;
+  isImageIcon?: boolean; // true if icon is an image URL
 }
 
 export interface Book {
@@ -18,6 +19,7 @@ export interface Book {
   progress?: number;
   lastRead?: string;
   addedAt: string;
+  category?: string;
 }
 
 export interface Theme {
@@ -41,10 +43,19 @@ export interface Settings {
   isLocked: boolean;
 }
 
+export interface Note {
+  id: string;
+  title: string;
+  content: string; // HTML content
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface BookOSState {
   apps: App[];
   books: Book[];
   settings: Settings;
+  notes?: Note[];
 }
 
 // Backend API types

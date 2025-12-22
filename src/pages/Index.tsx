@@ -8,13 +8,14 @@ import { HomeView } from '@/components/bookos/HomeView';
 import { LibraryView } from '@/components/bookos/LibraryView';
 import { SettingsPanel } from '@/components/bookos/SettingsPanel';
 import { DeveloperSettings } from '@/components/bookos/DeveloperSettings';
+import { NotesApp } from '@/components/bookos/NotesApp';
 import { Modal } from '@/components/bookos/Modal';
 import { AppForm } from '@/components/bookos/AppForm';
 import { BookForm } from '@/components/bookos/BookForm';
 import { App, Book } from '@/types/bookos';
 import { cn } from '@/lib/utils';
 
-type ViewType = 'home' | 'library' | 'settings' | 'developer';
+type ViewType = 'home' | 'library' | 'settings' | 'developer' | 'notes';
 type ModalType = 'addApp' | 'editApp' | 'addBook' | 'editBook' | null;
 
 const Index = () => {
@@ -168,8 +169,14 @@ const Index = () => {
           </div>
         )}
 
+        {activeView === 'notes' && (
+          <div className="flex-1 overflow-hidden">
+            <NotesApp onClose={() => setActiveView('home')} />
+          </div>
+        )}
+
         <Dock
-          activeView={activeView === 'developer' ? 'settings' : activeView}
+          activeView={activeView === 'developer' ? 'settings' : activeView === 'notes' ? 'notes' : activeView}
           onViewChange={setActiveView}
           onAddApp={() => setModalType('addApp')}
           onAddBook={() => setModalType('addBook')}
