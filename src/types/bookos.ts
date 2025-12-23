@@ -18,7 +18,16 @@ export interface Book {
   progress?: number;
   lastRead?: string;
   addedAt: string;
+  genre?: string;
+  tags?: string[];
+  rating?: number; // 1-5
+  isFavorite?: boolean;
 }
+
+export type BookSortField = 'title' | 'author' | 'addedAt' | 'lastRead' | 'progress' | 'rating';
+export type BookSortOrder = 'asc' | 'desc';
+export type BookViewMode = 'grid' | 'list';
+export type BookGroupBy = 'none' | 'status' | 'genre' | 'author' | 'rating';
 
 export interface Theme {
   id: string;
