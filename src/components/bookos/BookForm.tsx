@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BookFormProps {
@@ -99,6 +100,34 @@ const SelectItem = forwardRef<
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
+const GENRES = [
+  'Roman', 'Science-Fiction', 'Fantasy', 'Thriller', 'Policier', 
+  'Romance', 'Horreur', 'Biographie', 'Histoire', 'Science', 
+  'Philosophie', 'Développement personnel', 'Manga', 'BD', 'Autre'
+];
+
+function RatingStars({ rating, onChange }: { rating: number; onChange: (r: number) => void }) {
+  return (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onChange(rating === star ? 0 : star)}
+          className="p-0.5 hover:scale-110 transition-transform"
+        >
+          <Star 
+            className={cn(
+              "w-6 h-6 transition-colors",
+              star <= rating ? "fill-primary text-primary" : "text-muted-foreground/40"
+            )} 
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function BookForm({ book, apps, onSave, onDelete, onCancel }: BookFormProps) {
   const [title, setTitle] = useState(book?.title || '');
   const [author, setAuthor] = useState(book?.author || '');
@@ -107,6 +136,10 @@ export function BookForm({ book, apps, onSave, onDelete, onCancel }: BookFormPro
   const [url, setUrl] = useState(book?.url || '');
   const [appId, setAppId] = useState(book?.appId || '');
   const [progress, setProgress] = useState(book?.progress || 0);
+  const [genre, setGenre] = useState(book?.genre || '');
+  const [rating, setRating] = useState(book?.rating || 0);
+  const [isFavorite, setIsFavorite] = useState(book?.isFavorite || false);
+  const [tags, setTags] = useState(book?.tags?.join(', ') || '');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,12 +153,16 @@ export function BookForm({ book, apps, onSave, onDelete, onCancel }: BookFormPro
         appId: openWith === 'app' ? appId : undefined,
         progress,
         lastRead: book?.lastRead,
+        genre: genre || undefined,
+        rating: rating || undefined,
+        isFavorite,
+        tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : undefined,
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
       <div className="space-y-2">
         <Label htmlFor="title">Titre du livre</Label>
         <Input
@@ -145,6 +182,42 @@ export function BookForm({ book, apps, onSave, onDelete, onCancel }: BookFormPro
           onChange={(e) => setAuthor(e.target.value)}
           placeholder="Ex: George Orwell"
           required
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Genre</Label>
+          <Select value={genre} onValueChange={setGenre}>
+            <SelectTrigger>
+              <SelectValue placeholder="Choisir..." />
+            </SelectTrigger>
+            <SelectContent>
+              {GENRES.map((g) => (
+                <SelectItem key={g} value={g}>{g}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="space-y-2">
+          <Label>Note</Label>
+          <RatingStars rating={rating} onChange={setRating} />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Switch checked={isFavorite} onCheckedChange={setIsFavorite} />
+        <Label>Favori</Label>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="tags">Tags (séparés par virgule)</Label>
+        <Input
+          id="tags"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder="Ex: classique, dystopie, préféré"
         />
       </div>
 
