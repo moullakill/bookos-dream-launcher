@@ -8,6 +8,7 @@ import { HomeView } from '@/components/bookos/HomeView';
 import { LibraryView } from '@/components/bookos/LibraryView';
 import { SettingsPanel } from '@/components/bookos/SettingsPanel';
 import { DeveloperSettings } from '@/components/bookos/DeveloperSettings';
+import { SecretVault } from '@/components/bookos/SecretVault';
 import { Modal } from '@/components/bookos/Modal';
 import { AppForm } from '@/components/bookos/AppForm';
 import { BookForm } from '@/components/bookos/BookForm';
@@ -22,6 +23,7 @@ const Index = () => {
     apps,
     books,
     settings,
+    secrets,
     isLoading,
     isUnlocked,
     addApp,
@@ -34,6 +36,8 @@ const Index = () => {
     setLockCode,
     unlock,
     lock,
+    addSecret,
+    deleteSecret,
   } = useBookOS();
 
   const [activeView, setActiveView] = useState<ViewType>('home');
@@ -41,6 +45,7 @@ const Index = () => {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [titleClickCount, setTitleClickCount] = useState(0);
+  const [showSecretVault, setShowSecretVault] = useState(false);
 
   const themeClass = getThemeClass(settings.theme);
 
@@ -173,6 +178,7 @@ const Index = () => {
           onViewChange={setActiveView}
           onAddApp={() => setModalType('addApp')}
           onAddBook={() => setModalType('addBook')}
+          onOpenSecretVault={() => setShowSecretVault(true)}
         />
       </div>
 
@@ -248,6 +254,16 @@ const Index = () => {
           />
         )}
       </Modal>
+
+      {/* Secret Vault */}
+      {showSecretVault && (
+        <SecretVault
+          secrets={secrets}
+          onAddSecret={addSecret}
+          onDeleteSecret={deleteSecret}
+          onClose={() => setShowSecretVault(false)}
+        />
+      )}
     </div>
   );
 };

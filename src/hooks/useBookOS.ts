@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { App, Book, Settings, BookOSState } from '@/types/bookos';
+import { App, Book, Settings, BookOSState, SecretItem } from '@/types/bookos';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -34,6 +34,7 @@ export function useBookOS() {
   const [apps, setApps] = useState<App[]>(defaultApps);
   const [books, setBooks] = useState<Book[]>(defaultBooks);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [secrets, setSecrets] = useState<SecretItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUnlocked, setIsUnlocked] = useState(true);
 
@@ -43,10 +44,11 @@ export function useBookOS() {
       // Try to fetch from backend, fallback to localStorage
       const stored = localStorage.getItem('bookos-state');
       if (stored) {
-        const state: BookOSState = JSON.parse(stored);
+        const state = JSON.parse(stored);
         setApps(state.apps || defaultApps);
         setBooks(state.books || defaultBooks);
         setSettings(state.settings || defaultSettings);
+        setSecrets(state.secrets || []);
         setIsUnlocked(!state.settings?.lockCode);
       }
     } catch (error) {
@@ -73,9 +75,9 @@ export function useBookOS() {
 
   useEffect(() => {
     if (!isLoading) {
-      saveData({ apps, books, settings });
+      saveData({ apps, books, settings, secrets });
     }
-  }, [apps, books, settings, isLoading, saveData]);
+  }, [apps, books, settings, secrets, isLoading, saveData]);
 
   // App management
   const addApp = useCallback((app: Omit<App, 'id'>) => {
@@ -129,10 +131,21 @@ export function useBookOS() {
     }
   }, [settings.lockCode]);
 
+  // Secret management
+  const addSecret = useCallback((secret: Omit<SecretItem, 'id'>) => {
+    const newSecret = { ...secret, id: Date.now().toString() };
+    setSecrets(prev => [...prev, newSecret]);
+  }, []);
+
+  const deleteSecret = useCallback((id: string) => {
+    setSecrets(prev => prev.filter(s => s.id !== id));
+  }, []);
+
   return {
     apps,
     books,
     settings,
+    secrets,
     isLoading,
     isUnlocked,
     addApp,
@@ -145,5 +158,7 @@ export function useBookOS() {
     setLockCode,
     unlock,
     lock,
+    addSecret,
+    deleteSecret,
   };
 }

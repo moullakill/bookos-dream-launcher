@@ -1,3 +1,11 @@
+export interface SecretItem {
+  id: string;
+  name: string;
+  url: string;
+  type: 'link' | 'app';
+  icon: string;
+}
+
 export interface App {
   id: string;
   name: string;
@@ -54,6 +62,7 @@ export interface BookOSState {
   apps: App[];
   books: Book[];
   settings: Settings;
+  secrets?: SecretItem[];
 }
 
 // Backend API types
