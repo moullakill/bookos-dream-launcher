@@ -137,6 +137,10 @@ export function useBookOS() {
     setSecrets(prev => [...prev, newSecret]);
   }, []);
 
+  const updateSecret = useCallback((id: string, updates: Partial<SecretItem>) => {
+    setSecrets(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+  }, []);
+
   const deleteSecret = useCallback((id: string) => {
     setSecrets(prev => prev.filter(s => s.id !== id));
   }, []);
@@ -159,6 +163,7 @@ export function useBookOS() {
     unlock,
     lock,
     addSecret,
+    updateSecret,
     deleteSecret,
   };
 }
