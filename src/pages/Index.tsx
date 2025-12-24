@@ -37,6 +37,7 @@ const Index = () => {
     unlock,
     lock,
     addSecret,
+    updateSecret,
     deleteSecret,
   } = useBookOS();
 
@@ -260,6 +261,7 @@ const Index = () => {
         <SecretVault
           secrets={secrets}
           onAddSecret={addSecret}
+          onUpdateSecret={updateSecret}
           onDeleteSecret={deleteSecret}
           onClose={() => setShowSecretVault(false)}
         />

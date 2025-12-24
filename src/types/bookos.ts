@@ -3,7 +3,8 @@ export interface SecretItem {
   name: string;
   url: string;
   type: 'link' | 'app';
-  icon: string;
+  iconType: 'emoji' | 'image';
+  icon: string; // emoji character or image URL
 }
 
 export interface App {
