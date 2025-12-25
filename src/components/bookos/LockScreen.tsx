@@ -3,21 +3,22 @@ import { Lock, Delete } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LockScreenProps {
-  onUnlock: (code: string) => boolean;
+  onUnlock: (code: string) => Promise<boolean> | boolean;
 }
 
 export function LockScreen({ onUnlock }: LockScreenProps) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
 
-  const handleDigit = (digit: string) => {
+  const handleDigit = async (digit: string) => {
     if (code.length < 4) {
       const newCode = code + digit;
       setCode(newCode);
       setError(false);
       
       if (newCode.length === 4) {
-        if (!onUnlock(newCode)) {
+        const result = await onUnlock(newCode);
+        if (!result) {
           setError(true);
           setTimeout(() => {
             setCode('');

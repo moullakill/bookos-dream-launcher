@@ -11,6 +11,7 @@ interface SecretVaultProps {
   onAddSecret: (secret: Omit<SecretItem, 'id'>) => void;
   onUpdateSecret: (id: string, updates: Partial<SecretItem>) => void;
   onDeleteSecret: (id: string) => void;
+  onOpenSecret: (secret: SecretItem) => void;
   onClose: () => void;
 }
 
@@ -30,7 +31,7 @@ const defaultFormData: SecretFormData = {
   icon: ''
 };
 
-export function SecretVault({ secrets, onAddSecret, onUpdateSecret, onDeleteSecret, onClose }: SecretVaultProps) {
+export function SecretVault({ secrets, onAddSecret, onUpdateSecret, onDeleteSecret, onOpenSecret, onClose }: SecretVaultProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showUrls, setShowUrls] = useState(false);
@@ -75,13 +76,8 @@ export function SecretVault({ secrets, onAddSecret, onUpdateSecret, onDeleteSecr
   };
 
   const handleOpen = (secret: SecretItem) => {
-    if (secret.type === 'app') {
-      // For apps, treat as path
-      window.location.href = secret.url;
-    } else {
-      // For links, open in new tab
-      window.open(secret.url, '_blank');
-    }
+    // Delegate opening to backend via prop
+    onOpenSecret(secret);
   };
 
   const renderIcon = (secret: SecretItem) => {
