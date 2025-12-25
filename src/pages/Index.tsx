@@ -26,12 +26,15 @@ const Index = () => {
     secrets,
     isLoading,
     isUnlocked,
+    isOnline,
     addApp,
     updateApp,
     deleteApp,
+    openApp,
     addBook,
     updateBook,
     deleteBook,
+    openBook,
     updateSettings,
     setLockCode,
     unlock,
@@ -39,6 +42,7 @@ const Index = () => {
     addSecret,
     updateSecret,
     deleteSecret,
+    openSecretItem,
   } = useBookOS();
 
   const [activeView, setActiveView] = useState<ViewType>('home');
@@ -64,22 +68,11 @@ const Index = () => {
   }, []);
 
   const handleOpenApp = (app: App) => {
-    if (app.isPath) {
-      window.location.href = app.url;
-    } else {
-      window.open(app.url, '_blank');
-    }
+    openApp(app);
   };
 
   const handleOpenBook = (book: Book) => {
-    updateBook(book.id, { lastRead: new Date().toISOString() });
-    
-    if (book.openWith === 'url' && book.url) {
-      window.open(book.url, '_blank');
-    } else if (book.openWith === 'app' && book.appId) {
-      const app = apps.find(a => a.id === book.appId);
-      if (app) handleOpenApp(app);
-    }
+    openBook(book);
   };
 
   const handleEditApp = (app: App) => {
@@ -122,6 +115,13 @@ const Index = () => {
           />
           <div className="fixed inset-0 bg-background/60 z-0" />
         </>
+      )}
+
+      {/* Connection status indicator */}
+      {!isOnline && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-destructive/90 text-destructive-foreground text-xs text-center py-1">
+          Mode hors-ligne - Les données sont sauvegardées localement
+        </div>
       )}
 
       {/* Lock screen */}
@@ -263,6 +263,7 @@ const Index = () => {
           onAddSecret={addSecret}
           onUpdateSecret={updateSecret}
           onDeleteSecret={deleteSecret}
+          onOpenSecret={openSecretItem}
           onClose={() => setShowSecretVault(false)}
         />
       )}
