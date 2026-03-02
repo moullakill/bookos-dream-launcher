@@ -35,6 +35,24 @@ PUT    /api/secrets/:id  - Met à jour un secret
 DELETE /api/secrets/:id  - Supprime un secret
 ```
 
+### Statut Système
+```
+GET /api/system/status   - Informations système (RAM, CPU, disque, OS, réseau)
+```
+
+**Response:**
+```json
+{
+  "ram": { "total": 4096, "used": 2048, "free": 2048 },
+  "cpu": { "usage": 35.2, "cores": 4, "model": "ARM Cortex-A53" },
+  "os": { "name": "Debian", "version": "12", "kernel": "6.1.0" },
+  "display": { "server": "Wayland", "resolution": "1024x600" },
+  "network": { "connected": true, "ip": "192.168.1.42", "ssid": "MonWifi" },
+  "uptime": 86400,
+  "disk": { "total": 32768, "used": 12288, "free": 20480 }
+}
+```
+
 ### Paramètres
 ```
 GET  /api/settings       - Récupère les paramètres
@@ -330,6 +348,49 @@ app.post('/api/execute', (req, res) => {
     } else {
       res.json({ success: true, output: stdout });
     }
+  });
+});
+
+// ============= Statut Système =============
+
+const os = require('os');
+
+app.get('/api/system/status', (req, res) => {
+  const cpus = os.cpus();
+  const totalMem = Math.round(os.totalmem() / 1024 / 1024);
+  const freeMem = Math.round(os.freemem() / 1024 / 1024);
+  
+  // Calculate CPU usage
+  const cpuUsage = cpus.reduce((acc, cpu) => {
+    const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
+    const idle = cpu.times.idle;
+    return acc + ((total - idle) / total) * 100;
+  }, 0) / cpus.length;
+
+  // Disk usage via df command
+  exec('df -m / | tail -1', (error, stdout) => {
+    let disk = { total: 0, used: 0, free: 0 };
+    if (!error && stdout) {
+      const parts = stdout.trim().split(/\s+/);
+      disk = { total: parseInt(parts[1]) || 0, used: parseInt(parts[2]) || 0, free: parseInt(parts[3]) || 0 };
+    }
+
+    // Network info
+    const interfaces = os.networkInterfaces();
+    const netInterface = Object.values(interfaces).flat().find(i => i && !i.internal && i.family === 'IPv4');
+
+    // Display server detection
+    const displayServer = process.env.WAYLAND_DISPLAY ? 'Wayland' : (process.env.DISPLAY ? 'X11' : 'Inconnu');
+
+    res.json({
+      ram: { total: totalMem, used: totalMem - freeMem, free: freeMem },
+      cpu: { usage: Math.round(cpuUsage * 10) / 10, cores: cpus.length, model: cpus[0]?.model || 'Inconnu' },
+      os: { name: os.type(), version: os.release(), kernel: os.version() },
+      display: { server: displayServer, resolution: '1024x600' },
+      network: { connected: !!netInterface, ip: netInterface?.address, ssid: undefined },
+      uptime: Math.round(os.uptime()),
+      disk,
+    });
   });
 });
 

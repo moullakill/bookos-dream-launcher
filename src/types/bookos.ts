@@ -66,6 +66,17 @@ export interface BookOSState {
   secrets?: SecretItem[];
 }
 
+// System Status types
+export interface SystemStatus {
+  ram: { total: number; used: number; free: number }; // in MB
+  cpu: { usage: number; cores: number; model: string };
+  os: { name: string; version: string; kernel: string };
+  display: { server: string; resolution: string };
+  network: { connected: boolean; ip?: string; ssid?: string };
+  uptime: number; // seconds
+  disk: { total: number; used: number; free: number }; // in MB
+}
+
 // Backend API types
 export interface ApiResponse<T> {
   success: boolean;
