@@ -177,9 +177,9 @@ const Index = () => {
 
         {activeView === 'status' && (
           <SystemStatusView
-            appsCount={apps.length}
+            appsCount={apps.filter(a => a.isPath).length}
             booksCount={books.length}
-            secretsCount={secrets.length}
+            sitesCount={apps.filter(a => !a.isPath).length}
           />
         )}
 
