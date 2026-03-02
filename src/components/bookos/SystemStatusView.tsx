@@ -6,13 +6,13 @@ import { fetchSystemStatus } from '@/lib/api';
 import { SystemStatus } from '@/types/bookos';
 import { 
   Cpu, MemoryStick, HardDrive, Monitor, Wifi, WifiOff, 
-  Server, Clock, BookOpen, Grid3X3, KeyRound, CheckCircle2, XCircle 
+  Server, Clock, BookOpen, Grid3X3, Globe, CheckCircle2, XCircle 
 } from 'lucide-react';
 
 interface SystemStatusViewProps {
   appsCount: number;
   booksCount: number;
-  secretsCount: number;
+  sitesCount: number;
 }
 
 function formatUptime(seconds: number): string {
@@ -58,7 +58,7 @@ function GaugeChart({ value, label, color }: { value: number; label: string; col
   );
 }
 
-export function SystemStatusView({ appsCount, booksCount, secretsCount }: SystemStatusViewProps) {
+export function SystemStatusView({ appsCount, booksCount, sitesCount }: SystemStatusViewProps) {
   const [status, setStatus] = useState<SystemStatus | null>(null);
   const [isBackendOnline, setIsBackendOnline] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -184,9 +184,9 @@ export function SystemStatusView({ appsCount, booksCount, secretsCount }: System
               <span className="text-xs text-muted-foreground">Livres</span>
             </div>
             <div className="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50">
-              <KeyRound className="w-5 h-5 text-primary" />
-              <span className="text-lg font-bold text-foreground">{secretsCount}</span>
-              <span className="text-xs text-muted-foreground">Secrets</span>
+              <Globe className="w-5 h-5 text-primary" />
+              <span className="text-lg font-bold text-foreground">{sitesCount}</span>
+              <span className="text-xs text-muted-foreground">Sites</span>
             </div>
           </div>
         </CardContent>
