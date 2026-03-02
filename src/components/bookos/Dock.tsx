@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Library, Grid3X3, Settings, Plus } from 'lucide-react';
+import { Library, Grid3X3, Settings, Plus, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DockProps {
-  activeView: 'home' | 'library' | 'settings';
-  onViewChange: (view: 'home' | 'library' | 'settings') => void;
+  activeView: 'home' | 'library' | 'settings' | 'status';
+  onViewChange: (view: 'home' | 'library' | 'settings' | 'status') => void;
   onAddApp: () => void;
   onAddBook: () => void;
   onOpenSecretVault: () => void;
@@ -17,10 +17,11 @@ export function Dock({ activeView, onViewChange, onAddApp, onAddBook, onOpenSecr
   const items = [
     { id: 'home' as const, icon: Grid3X3, label: 'Apps' },
     { id: 'library' as const, icon: Library, label: 'Livres' },
+    { id: 'status' as const, icon: Activity, label: 'Statut' },
     { id: 'settings' as const, icon: Settings, label: 'Réglages' },
   ];
 
-  const handleItemClick = (id: 'home' | 'library' | 'settings') => {
+  const handleItemClick = (id: 'home' | 'library' | 'settings' | 'status') => {
     if (id === 'library') {
       const newCount = libraryClickCount + 1;
       setLibraryClickCount(newCount);

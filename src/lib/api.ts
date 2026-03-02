@@ -1,5 +1,5 @@
 // BookOS Backend API Service
-import { App, Book, Settings, BookOSState, SecretItem, ApiResponse } from '@/types/bookos';
+import { App, Book, Settings, BookOSState, SecretItem, ApiResponse, SystemStatus } from '@/types/bookos';
 
 const API_BASE = 'http://localhost:8080/api';
 
@@ -209,6 +209,12 @@ export async function executeCommand(command: string): Promise<ApiResponse<Execu
     method: 'POST',
     body: JSON.stringify({ command }),
   });
+}
+
+// ============= Statut Système =============
+
+export async function fetchSystemStatus(): Promise<ApiResponse<SystemStatus>> {
+  return apiCall<SystemStatus>('/system/status');
 }
 
 // ============= Upload de fichiers =============
